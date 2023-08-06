@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { sentenceCase } from 'change-case';
 import { useState, React, useEffect } from 'react';
 import axios from 'axios';
-import { Link, Navigate } from 'react-router-dom';
 
 // @mui
 import {
@@ -23,6 +22,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Image
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
@@ -30,19 +30,21 @@ import Label from '../components/label';
 import Scrollbar from '../components/scrollbar';
 
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { DenunciasListHead, DenunciasListToolBar } from '../sections/@dashboard/blog';
 // mock
-import dataFetch from '../_mock/user';
+import denuncias from '../_mock/denuncias';
 // Importa la librería axios para realizar las solicitudes HTTP (instálala si aún no lo has hecho)
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'nombreCompleto', label: 'Nombre', alignRight: false },
-  { id: 'cedula', label: 'Cedula', alignRight: false },
-  { id: 'email', label: 'Correo', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'isBlocked', label: 'Bloqueado', alignRight: false },
+  { id: 'tituloDenuncia', label: 'Titulo', alignRight: false },
+  { id: 'nombreDenunciante', label: 'Denunciante', alignRight: false },
+  { id: 'descripcion', label: 'Descripción', alignRight: false },
+  { id: 'estado', label: 'Estado', alignRight: false },
+  { id: 'categoria', label: 'Categoria', alignRight: false },
+  { id: 'evidencia', label: 'Evidencia', alignRight: false },
+  { id: 'ubicacion', label: 'Ubicacion', alignRight: false },
   { id: '' },
 ];
 
@@ -64,16 +66,15 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function UserPage() {
+function DenunciasPage() {
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataAPI, setDataAPI] = useState({ dataInfo: [] });
-  console.log('prueba');
+  console.log('dENUNCIASpRUEBAS');
 
   useEffect(() => {
     console.log('hola estoy en use effect');
@@ -82,24 +83,17 @@ function UserPage() {
 
   const callFetch = async () => {
     try {
-      const response = await dataFetch();
+      const response = await denuncias();
       setDataAPI({ dataInfo: response });
-      console.log("usuario",response)
+      console.log("salida",response)
     } catch (error) {
       // Manejar el error si es necesario
-      console.error('Error al obtener los usuarios:', error);
+      console.error('Error al obtener las Denuncias:', error);
     }
   };
 
   const { dataInfo } = dataAPI;
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -131,10 +125,6 @@ function UserPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
 
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataInfo?.length) : 0;
@@ -142,19 +132,19 @@ function UserPage() {
   return (
     <>
       <Helmet>
-        <title>User | Minimal UI</title>
+        <title>Denuncias | Minimal UI</title>
       </Helmet>
 
       <Container>
 
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <DenunciasListToolBar numSelected={selected.length} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <DenunciasListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -164,46 +154,36 @@ function UserPage() {
                 />
                 <TableBody>
                   {dataInfo?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, nombreCompleto, email, isBlocked, cedula, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(nombreCompleto) !== -1;
+                    const { id, tituloDenuncia, nombreDenunciante, descripcion, ubicacion, categoria, estado, evidencia,coordenadas } = row;
+                    const selectedDenuncia = selected.indexOf(tituloDenuncia) !== -1;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedDenuncia}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, nombreCompleto)} />
+                          <Checkbox checked={selectedDenuncia} onChange={(event) => handleClick(event, tituloDenuncia)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={nombreCompleto} src={avatarUrl} />
+                            <Avatar alt={tituloDenuncia}/>
                             <Typography variant="subtitle2" noWrap>
-                              {nombreCompleto}
+                              {tituloDenuncia}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{cedula}</TableCell>
+                        <TableCell align="left">{nombreDenunciante}</TableCell>
 
-                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{descripcion}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={isVerified ? 'success' : 'error'}>
-                            {isVerified ? 'Yes' : 'No'}
-                          </Label>
-                        </TableCell>
+                        <TableCell align="left">{estado}</TableCell>
 
+                        <TableCell align="left">{categoria}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={(isBlocked === 'banned' && 'error') || (isBlocked ? 'error' : 'success')}>
-                            {isBlocked ? 'Yes' : 'No'}
-                          </Label>
-                        </TableCell>
+                        <TableCell align="left"> <img src='{evidencia}' alt='{evidencia}'/> </TableCell>
 
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
+                        <TableCell align="left">{ubicacion.coordenadas}</TableCell>
+                        
                       </TableRow>
                     );
                   })}
@@ -229,43 +209,10 @@ function UserPage() {
         </Card>
       </Container>
 
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Link to="/dashboard/usuario">
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          {/* <a Navigate to ="usuario">Ver</a> */}
-          ver</Link>
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Desbloquear
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Bloquear
-        </MenuItem>
-      </Popover>
+      
     </>
   );
 }
 
-export default UserPage;
+export default DenunciasPage;
+

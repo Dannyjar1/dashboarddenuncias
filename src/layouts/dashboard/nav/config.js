@@ -18,7 +18,7 @@ const navConfig = [
   },
   {
     title: 'Denuncias',
-    path: '/dashboard/blog',
+    path: '/dashboard/denuncias',
     icon: icon('ic_blog'),
   },
   {
@@ -26,6 +26,7 @@ const navConfig = [
     path: '/404',
     icon: icon('ic_admin'),
   },
+ 
 ];
 
 export default navConfig;
