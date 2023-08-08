@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { sentenceCase } from 'change-case';
-import { useState, React, useEffect } from 'react';
+import { useState, React, useEffect, LoadingButton } from 'react';
 import axios from 'axios';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Radio } from 'semantic-ui-react'
 
 // @mui
 import {
@@ -194,9 +195,7 @@ function UserPage() {
 
 
                         <TableCell align="left">
-                          <Label color={(isBlocked === 'banned' && 'error') || (isBlocked ? 'error' : 'success')}>
-                            {isBlocked ? 'Yes' : 'No'}
-                          </Label>
+                        <div class="ui fitted toggle checkbox"><input type="radio" class="hidden" readonly="" tabindex="0"/><label></label></div>
                         </TableCell>
 
                         <TableCell align="right">
@@ -254,15 +253,7 @@ function UserPage() {
           ver</Link>
         </MenuItem>
 
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Desbloquear
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Bloquear
-        </MenuItem>
+        
       </Popover>
     </>
   );

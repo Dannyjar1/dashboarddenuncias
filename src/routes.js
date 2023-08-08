@@ -6,7 +6,9 @@ import SimpleLayout from './layouts/simple';
 import DenunciasPage from './pages/DenunciasPage';
 import UsuarioPage from './pages/UsuarioPage';
 import UserPage from './pages/UserPage';
+import DenunciaPage from './pages/DenunciaPage';
 import LoginPage from './pages/LoginPage';
+import NewAdmin from './pages/NewAdmin';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
@@ -25,6 +27,8 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'denuncias', element: <DenunciasPage /> },
         { path: 'usuario', element: <UsuarioPage /> },
+        { path: 'denuncia', element: <DenunciaPage/> },
+        { path: 'admins', element: <NewAdmin/> },
       ],
     },
     {
