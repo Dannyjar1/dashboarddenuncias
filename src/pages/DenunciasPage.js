@@ -186,9 +186,9 @@ function DenunciasPage() {
 
                         <TableCell align="left">{categoria}</TableCell>
 
-                        <TableCell align="left"> <img src='{evidencia}' alt='{evidencia}'/> </TableCell>
+                        <TableCell align="left"> <img src={evidencia} alt='{evidencia}'/> </TableCell>
 
-                        <TableCell align="left">{ubicacion.coordenadas}</TableCell>
+                        <TableCell align="left">{ubicacion}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>

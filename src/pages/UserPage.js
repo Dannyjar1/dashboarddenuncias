@@ -38,6 +38,7 @@ import dataFetch from '../_mock/user';
 
 // ----------------------------------------------------------------------
 
+
 const TABLE_HEAD = [
   { id: 'nombreCompleto', label: 'Nombre', alignRight: false },
   { id: 'cedula', label: 'Cedula', alignRight: false },
@@ -93,6 +94,39 @@ function UserPage() {
   };
 
   const { dataInfo } = dataAPI;
+  
+
+  // Función para bloquear un usuario
+async function handleisBlocked (cedula) {
+  try {
+    const url = `https://back-barrios-462cb6c76674.herokuapp.com/admin/unblockUser?cedula=${cedula}`;
+    const data = { id: cedula };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      console.log('Usuario bloqueado exitosamente.');
+  
+    } else {
+      console.error('Error al bloquear usuario:', response.statusText);
+
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+
+  }
+}
+
+
+const usuarioIdABloquear = dataInfo.cedula;
+handleisBlocked(usuarioIdABloquear);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -193,9 +227,13 @@ function UserPage() {
                           </Label>
                         </TableCell>
 
+                        <TableCell align="left">
+                          <Label color={isBlocked ? 'success' : 'error'}>
+                            {isBlocked ? 'Yes' : 'No'}
+                          </Label>
+                        </TableCell>
 
                         
-
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -251,7 +289,11 @@ function UserPage() {
           ver</Link>
         </MenuItem>
 
-        
+        <MenuItem>
+          <Iconify aria-label="bloquear" onClick={() => handleisBlocked(usuarioIdABloquear)}/>
+          Bloquear
+        </MenuItem>
+
       </Popover>
     </>
   );
