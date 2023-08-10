@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { sentenceCase } from 'change-case';
-import { useState, React, useEffect } from 'react';
+import { useState, React, useEffect, LoadingButton } from 'react';
 import axios from 'axios';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 // @mui
 import {
@@ -193,11 +194,7 @@ function UserPage() {
                         </TableCell>
 
 
-                        <TableCell align="left">
-                          <Label color={(isBlocked === 'banned' && 'error') || (isBlocked ? 'error' : 'success')}>
-                            {isBlocked ? 'Yes' : 'No'}
-                          </Label>
-                        </TableCell>
+                        
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -254,15 +251,7 @@ function UserPage() {
           ver</Link>
         </MenuItem>
 
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Desbloquear
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Bloquear
-        </MenuItem>
+        
       </Popover>
     </>
   );

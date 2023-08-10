@@ -1,8 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { sentenceCase } from 'change-case';
 import { useState, React, useEffect } from 'react';
-import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 // @mui
 import {
   Avatar,
@@ -93,7 +92,14 @@ function DenunciasPage() {
   };
 
   const { dataInfo } = dataAPI;
+  
+  const handleOpenMenu = (event) => {
+    setOpen(event.currentTarget);
+  };
 
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -183,6 +189,12 @@ function DenunciasPage() {
                         <TableCell align="left"> <img src='{evidencia}' alt='{evidencia}'/> </TableCell>
 
                         <TableCell align="left">{ubicacion.coordenadas}</TableCell>
+
+                        <TableCell align="right">
+                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                            <Iconify icon={'eva:more-vertical-fill'} />
+                          </IconButton>
+                        </TableCell>
                         
                       </TableRow>
                     );
@@ -210,6 +222,31 @@ function DenunciasPage() {
       </Container>
 
       
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 140,
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem>
+          <Link to="/dashboard/denuncia">
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+          {/* <a Navigate to ="usuario">Ver</a> */}
+          ver</Link>
+        </MenuItem>
+      </Popover>
     </>
   );
 }
